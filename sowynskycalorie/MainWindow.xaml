@@ -8,7 +8,7 @@
         xmlns:viewmodel="clr-namespace:sowynskycalorie.ViewModel" 
         d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"  
-        Title="MainWindow" Height="600" Width="800">  
+        Title="sowynskycalorie" Height="600" Width="800">  
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type viewmodel:LoginMenuViewModel}">
@@ -16,6 +16,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:RegisterUserViewModel}">
                 <view:RegisterUserView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodel:CalorieTrackerViewModel}">
+                <view:CalorieTrackerView/>
             </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}"/>

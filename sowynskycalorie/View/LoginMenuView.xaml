@@ -51,15 +51,37 @@
                              Foreground="#5D4037" FontSize="14" Padding="10"/>
             </Border>
             
-            <!--placeholder command to test if it works....-->
             <Button Content="Login" Width="290" Height="45" Background="#FF7043" Foreground="White" FontWeight="Bold" FontSize="16"
                     BorderThickness="0" Cursor="Hand"
-                    Style="{StaticResource RoundedButton}" Command="{Binding AccountCreationCommand}" 
+                    Style="{StaticResource RoundedButton}" Command="{Binding LogInCommand}" 
                     />
 
-            <TextBlock Text="Don't have an account? Sign Up" Foreground="#FF7043" TextAlignment="Center" Margin="0,30,0,0" Cursor="Hand"
-                       FontSize="14" FontWeight="SemiBold" 
-                       />
+            <Button Content="Don't have an account? Sign up"
+        Command="{Binding AccountCreationCommand}"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Foreground="#FF7043"
+        Cursor="Hand"
+        FontSize="14"
+        FontWeight="SemiBold"
+        Padding="0"
+        Margin="0,30,0,0">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

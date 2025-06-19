@@ -1,0 +1,180 @@
+﻿<UserControl x:Class="sowynskycalorie.View.CalorieTrackerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Style TargetType="Button" x:Key="RoundedButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="50"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ProgressBar" x:Key="NutritionProgressBar">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="10,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid x:Name="PART_Track" Height="{TemplateBinding Height}">
+                            <Border Background="#FFE0B2" CornerRadius="10" />
+                            <Border x:Name="PART_Indicator"
+                                    Background="#FF7043"
+                                    CornerRadius="10"
+                                    HorizontalAlignment="Left"
+                                    Width="0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsIndeterminate" Value="True">
+                                <Setter TargetName="PART_Indicator" Property="Background" Value="#B0BEC5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="ProgressLabel">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#4E342E"/>
+            <Setter Property="Margin" Value="10,10,0,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#FFF5E1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Enhanced Top Bar -->
+        <DockPanel Grid.Row="0" Margin="15" LastChildFill="False" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                <Image Source="/Assets/logo1.png" Width="40" Height="40" Margin="0,0,10,0"/>
+                <StackPanel>
+                    <TextBlock Text="Today's Nutrition"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="#3E2723"/>
+                    <TextBlock Text="Track your daily intake"
+                               FontSize="14"
+                               Foreground="#8D6E63"
+                               Margin="2,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+            <Button Width="40"
+                    Height="40"
+                    Background="#FF7043"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    FontSize="20"
+                    Content="+"
+                    Style="{StaticResource RoundedButton}"
+                    Command="{Binding NavigateToFoodPageCommand}"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Margin="5,0"/>
+        </DockPanel>
+
+        <ScrollViewer Grid.Row="1" Margin="15,5" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding AddedProducts}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White"
+                                CornerRadius="12"
+                                BorderBrush="#FFCCBC"
+                                BorderThickness="1"
+                                Padding="10"
+                                Margin="0,5,0,10">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="6" ShadowDepth="2" Opacity="0.3"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Foreground="#5D4037"
+                                               Margin="0,0,0,5"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Kcal: " FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Kcal}" Margin="4,0,15,0"/>
+                                        <TextBlock Text="P: " FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Protein}" Margin="4,0,15,0"/>
+                                        <TextBlock Text="F: " FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Fat}" Margin="4,0,15,0"/>
+                                        <TextBlock Text="C: " FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Carbs}" Margin="4,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Background="#FFF3E0" Margin="0,10,0,0">
+
+            <TextBlock Style="{StaticResource ProgressLabel}">
+        <Run Text="Calories: "/>
+        <Run Text="{Binding KcalGoal}"/>
+            </TextBlock>
+            <ProgressBar
+        Style="{StaticResource NutritionProgressBar}"
+        Value="{Binding KcalProgress}"
+        Maximum="{Binding KcalGoal}" />
+
+            <TextBlock Style="{StaticResource ProgressLabel}">
+        <Run Text="Protein: "/>
+        <Run Text="{Binding ProteinGoal}"/>
+            </TextBlock>
+            <ProgressBar
+        Style="{StaticResource NutritionProgressBar}"
+        Value="{Binding ProteinProgress}"
+        Maximum="{Binding ProteinGoal}" />
+
+            <TextBlock Style="{StaticResource ProgressLabel}">
+        <Run Text="Fats: "/>
+        <Run Text="{Binding FatGoal}"/>
+            </TextBlock>
+            <ProgressBar
+        Style="{StaticResource NutritionProgressBar}"
+        Value="{Binding FatProgress}"
+        Maximum="{Binding FatGoal}" />
+
+            <TextBlock Style="{StaticResource ProgressLabel}">
+        <Run Text="Carbs: "/>
+        <Run Text="{Binding CarbsGoal}"/>
+            </TextBlock>
+            <ProgressBar
+        Style="{StaticResource NutritionProgressBar}"
+        Value="{Binding CarbsProgress}"
+        Maximum="{Binding CarbsGoal}" />
+
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -12,9 +12,14 @@ namespace sowynskycalorie.ViewModel
     {
         private readonly NavigationStore _navigationStore;
         public ICommand AccountCreationCommand { get; }
+        public ICommand LogInCommand{ get; }
         private void ExecuteAccountCreationCommand(object parameter)
         {
             _navigationStore.CurrentViewModel = new RegisterUserViewModel(_navigationStore);
+        }
+        private void ExecuteLogInCommand(object parameter)
+        {
+            _navigationStore.CurrentViewModel = new CalorieTrackerViewModel(_navigationStore);
         }
         private bool CanExecute(object parameter)
         {
@@ -24,7 +29,8 @@ namespace sowynskycalorie.ViewModel
         public LoginMenuViewModel(NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            AccountCreationCommand = new RelayCommand(ExecuteAccountCreationCommand, CanExecute);
+            AccountCreationCommand = new RelayCommand(ExecuteAccountCreationCommand,CanExecute);
+            LogInCommand = new RelayCommand(ExecuteLogInCommand,CanExecute);
         }
     }
 }

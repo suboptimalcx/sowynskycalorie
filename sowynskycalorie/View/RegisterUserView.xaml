@@ -34,8 +34,6 @@
     <Grid Background="#FFF5E1">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="290">
 
-            <!-- Header Text instead of Logo -->
-            <!-- Header Text instead of Logo -->
             <TextBlock Text="CREATE YOUR ACCOUNT" 
                        Foreground="#FF7043" 
                        FontSize="25" 
@@ -44,7 +42,6 @@
                        />
             <Border Height="3" Width="160" Background="#FF7043" CornerRadius="2"/>
 
-            <!-- Username -->
             <TextBlock Text="Username" Style="{StaticResource InputLabel}" />
             <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
                 <TextBox x:Name="UsernameTextBox" 
@@ -53,7 +50,6 @@
                          Text=""/>
             </Border>
 
-            <!-- Password -->
             <TextBlock Text="Password" Style="{StaticResource InputLabel}" />
             <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
                 <PasswordBox x:Name="PasswordBox" 
@@ -61,7 +57,6 @@
                              Foreground="#5D4037" FontSize="14" Padding="10"/>
             </Border>
 
-            <!-- Date of Birth -->
             <TextBlock Text="Date of Birth" Style="{StaticResource InputLabel}" />
             <Border Width="290" Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15" Padding="10,0">
                 <Grid VerticalAlignment="Center">
@@ -81,7 +76,6 @@
                     HorizontalAlignment="Right"
                     Padding="0" Margin="0,8,0,0">
                         <DatePicker.Resources>
-                            <!-- Hide the text box part -->
                             <Style TargetType="{x:Type DatePickerTextBox}">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </Style>
@@ -91,7 +85,6 @@
             </Border>
 
 
-            <!-- Weight -->
             <TextBlock Text="Weight (kg)" Style="{StaticResource InputLabel}" />
             <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
                 <TextBox x:Name="WeightTextBox" 
@@ -100,7 +93,6 @@
                          Text=""/>
             </Border>
 
-            <!-- Height -->
             <TextBlock Text="Height (cm)" Style="{StaticResource InputLabel}" />
             <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,25">
                 <TextBox x:Name="HeightTextBox" 
@@ -109,16 +101,38 @@
                          Text=""/>
             </Border>
 
-            <!-- Register Button -->
             <Button Content="Register" Width="290" Height="45" Background="#FF7043" Foreground="White" FontWeight="Bold" FontSize="16"
                     BorderThickness="0" Cursor="Hand"
                     Style="{StaticResource RoundedButton}"
+                    Command="{Binding ToLoginCommand}"
                     />
 
-            <!-- Bottom Text -->
-            <TextBlock Text="Already registered? Log in" Foreground="#FF7043" TextAlignment="Center" Margin="0,30,0,0" Cursor="Hand"
-                       FontSize="14" FontWeight="SemiBold"
-                       />
+            <Button Content="Already registered? Log in"
+        Command="{Binding ToLoginCommand}"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Foreground="#FF7043"
+        Cursor="Hand"
+        FontSize="14"
+        FontWeight="SemiBold"
+        Padding="0"
+        Margin="0,30,0,0">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>
