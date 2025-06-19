@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Assets\logo1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

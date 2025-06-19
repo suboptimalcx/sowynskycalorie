@@ -5,9 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
         xmlns:local="clr-namespace:sowynskycalorie"  
         xmlns:view="clr-namespace:sowynskycalorie.View"  
+        xmlns:viewmodel="clr-namespace:sowynskycalorie.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"  
-        Title="MainWindow" Height="450" Width="800">  
-    <Grid>  
-        <view:LoginMenuView/>  
+        Title="MainWindow" Height="600" Width="800">  
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewmodel:LoginMenuViewModel}">
+                <view:LoginMenuView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodel:RegisterUserViewModel}">
+                <view:RegisterUserView/>
+            </DataTemplate>
+        </Grid.Resources>
+        <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>  
 </Window>  
