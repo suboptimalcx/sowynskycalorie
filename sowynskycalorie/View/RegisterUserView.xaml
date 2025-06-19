@@ -27,7 +27,7 @@
             <Setter Property="Foreground" Value="#FF7043"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
         </Style>
     </UserControl.Resources>
 
@@ -39,42 +39,58 @@
                        FontSize="25" 
                        FontWeight="Bold" 
                        TextAlignment="Center" 
-                       />
-            <Border Height="3" Width="160" Background="#FF7043" CornerRadius="2"/>
+                       Margin="0,0,0,10"/>
+            <Border Height="3" Width="160" Background="#FF7043" CornerRadius="2" Margin="0,0,0,15"/>
 
             <TextBlock Text="Username" Style="{StaticResource InputLabel}" />
-            <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
+            <Border Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                 <TextBox x:Name="UsernameTextBox" 
                          Background="Transparent" BorderThickness="0" 
-                         Foreground="#5D4037" FontSize="14" Padding="10" 
-                         Text=""/>
+                         Foreground="#5D4037" FontSize="14" Padding="8" 
+                         Text=""
+                         />
             </Border>
 
             <TextBlock Text="Password" Style="{StaticResource InputLabel}" />
-            <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
+            <Border Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                 <PasswordBox x:Name="PasswordBox" 
                              Background="Transparent" BorderThickness="0" 
-                             Foreground="#5D4037" FontSize="14" Padding="10"/>
+                             Foreground="#5D4037" FontSize="14" Padding="8"/>
+            </Border>
+
+            <Border Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
+                <ComboBox x:Name="SexComboBox"
+              Background="Transparent"
+              BorderThickness="0"
+              Foreground="#5D4037"
+              FontSize="14"
+              Padding="4,2"
+              Height="26"
+              VerticalContentAlignment="Center"
+              SelectedIndex="0">
+                    <ComboBoxItem Content="Male" />
+                    <ComboBoxItem Content="Female" />
+                </ComboBox>
             </Border>
 
             <TextBlock Text="Date of Birth" Style="{StaticResource InputLabel}" />
-            <Border Width="290" Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15" Padding="10,0">
+            <Border Width="290" Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10" Padding="10,0">
                 <Grid VerticalAlignment="Center">
                     <TextBlock x:Name="SelectedDateText"
-                   Foreground="#5D4037"
-                   FontSize="14"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   Text="{Binding SelectedDate, ElementName=DateOfBirthPicker, StringFormat=\{0:MM/dd/yyyy\}}"
-                   IsHitTestVisible="False" />
+                               Foreground="#5D4037"
+                               FontSize="14"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               Text="{Binding SelectedDate, ElementName=DateOfBirthPicker, StringFormat=\{0:MM/dd/yyyy\}}"
+                               IsHitTestVisible="False" />
 
                     <DatePicker x:Name="DateOfBirthPicker"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="38" Height="28"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Right"
-                    Padding="0" Margin="0,8,0,0">
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="38" Height="28"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Padding="0" Margin="0,8,0,0">
                         <DatePicker.Resources>
                             <Style TargetType="{x:Type DatePickerTextBox}">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -84,39 +100,38 @@
                 </Grid>
             </Border>
 
-
             <TextBlock Text="Weight (kg)" Style="{StaticResource InputLabel}" />
-            <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,15">
+            <Border Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
                 <TextBox x:Name="WeightTextBox" 
                          Background="Transparent" BorderThickness="0" 
-                         Foreground="#5D4037" FontSize="14" Padding="10" 
+                         Foreground="#5D4037" FontSize="14" Padding="8" 
                          Text=""/>
             </Border>
 
             <TextBlock Text="Height (cm)" Style="{StaticResource InputLabel}" />
-            <Border Height="38" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,25">
+            <Border Height="32" Background="#FFF3E0" BorderBrush="#FF8A65" BorderThickness="1" CornerRadius="8" Margin="0,0,0,20">
                 <TextBox x:Name="HeightTextBox" 
                          Background="Transparent" BorderThickness="0" 
-                         Foreground="#5D4037" FontSize="14" Padding="10" 
+                         Foreground="#5D4037" FontSize="14" Padding="8" 
                          Text=""/>
             </Border>
 
-            <Button Content="Register" Width="290" Height="45" Background="#FF7043" Foreground="White" FontWeight="Bold" FontSize="16"
+            <Button Content="Register" Width="290" Height="40" Background="#FF7043" Foreground="White" FontWeight="Bold" FontSize="16"
                     BorderThickness="0" Cursor="Hand"
                     Style="{StaticResource RoundedButton}"
                     Command="{Binding ToLoginCommand}"
                     />
 
             <Button Content="Already registered? Log in"
-        Command="{Binding ToLoginCommand}"
-        Background="Transparent"
-        BorderBrush="Transparent"
-        Foreground="#FF7043"
-        Cursor="Hand"
-        FontSize="14"
-        FontWeight="SemiBold"
-        Padding="0"
-        Margin="0,30,0,0">
+                    Command="{Binding ToLoginCommand}"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Foreground="#FF7043"
+                    Cursor="Hand"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Padding="0"
+                    Margin="0,25,0,0">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Template">

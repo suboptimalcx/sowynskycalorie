@@ -73,6 +73,35 @@ INSERT INTO `meals_products` VALUES (1,1,1,100),(2,1,2,100),(3,2,3,50),(4,2,4,75
 UNLOCK TABLES;
 
 --
+-- Table structure for table `meals_ratings`
+--
+
+DROP TABLE IF EXISTS `meals_ratings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `meals_ratings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userID` int NOT NULL,
+  `mealID` int NOT NULL,
+  `meal_rating` enum('1','2','3','4','5','6','7','8','9','10') DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mealID` (`mealID`,`userID`),
+  KEY `userID` (`userID`),
+  CONSTRAINT `meals_ratings_ibfk_1` FOREIGN KEY (`mealID`) REFERENCES `meals` (`id`),
+  CONSTRAINT `meals_ratings_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `meals_ratings`
+--
+
+LOCK TABLES `meals_ratings` WRITE;
+/*!40000 ALTER TABLE `meals_ratings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `meals_ratings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `products`
 --
 
@@ -86,6 +115,7 @@ CREATE TABLE `products` (
   `protein` decimal(5,2) NOT NULL,
   `carbohydrates` decimal(5,2) NOT NULL,
   `fat` decimal(5,2) NOT NULL,
+  `category` enum('meat','fish','dairy','eggs','grains','bread','rice_and_pasta','vegetables','fruits','nuts_and_seeds','legumes','fats_and_oils','sweets','snacks','beverages','spices','sauces','frozen_foods','ready_meals','other') NOT NULL DEFAULT 'other',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -96,7 +126,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Chicken breast',165,31.00,0.00,3.60),(2,'Brown rice',216,5.00,44.80,1.80),(3,'Avocado',160,2.00,8.50,14.70),(4,'Egg',68,5.50,0.60,4.80),(5,'Protein bar',200,20.00,22.00,6.50);
+INSERT INTO `products` VALUES (1,'Chicken breast',165,31.00,0.00,3.60,'meat'),(2,'Brown rice',216,5.00,44.80,1.80,'rice_and_pasta'),(3,'Avocado',160,2.00,8.50,14.70,'fruits'),(4,'Egg',68,5.50,0.60,4.80,'eggs'),(5,'Protein bar',200,20.00,22.00,6.50,'snacks');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +198,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-19 16:28:51
+-- Dump completed on 2025-06-19 19:07:46
