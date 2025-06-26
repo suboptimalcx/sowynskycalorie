@@ -89,14 +89,14 @@
                                HorizontalAlignment="Left"
                                Text="{Binding SelectedDate, ElementName=DateOfBirthPicker, StringFormat=\{0:MM/dd/yyyy\}}"
                                IsHitTestVisible="False" />
-
                     <DatePicker x:Name="DateOfBirthPicker"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Width="38" Height="28"
-                                VerticalAlignment="Top"
-                                HorizontalAlignment="Right"
-                                Padding="0" Margin="0,8,0,0">
+            SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Background="Transparent"
+            BorderThickness="0"
+            Width="38" Height="28"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Padding="0" Margin="0,8,0,0">
                         <DatePicker.Resources>
                             <Style TargetType="{x:Type DatePickerTextBox}">
                                 <Setter Property="Visibility" Value="Collapsed" />

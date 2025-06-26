@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using sowynskycalorie.Model;
 using sowynskycalorie.Stores;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace sowynskycalorie.ViewModel
             }
             else
             {
-                _navigationStore.CurrentViewModel = new CalorieTrackerViewModel(_navigationStore);
+                _navigationStore.CurrentViewModel = new CalorieTrackerViewModel(_navigationStore, GetUserFromDatabase());
             }
         }
         private bool CanExecuteLogInCommand(object parameter)
@@ -81,6 +82,60 @@ namespace sowynskycalorie.ViewModel
             }
 
             return isCorrect;
+        }
+        private User GetUserFromDatabase()
+        {
+            User testUser = new User(
+                username: "testUser123",
+                password: "SecureP@ssword!",
+                weight: 70.5f,          // in kilograms
+                height: 175.0f,         // in centimeters
+                sex: true,              // assuming true = male, false = female
+                activity: activityLevel.super,  // assuming activityLevel is an enum
+                dob: new DateTime(1995, 5, 20)     // year, month, day
+            );
+            return testUser;
+            //try
+            //{
+            //    using (MySqlConnection conn = new MySqlConnection(App.ConnectionStr))
+            //    {
+            //        string query = @"USE sowynsky_calorie; 
+            //                 SELECT username, password, weight, height, sex, activitylvl, DoB 
+            //                 FROM Users 
+            //                 WHERE username = @Username AND password = @Password";
+
+            //        using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            //        {
+            //            cmd.Parameters.AddWithValue("@Username", Username);
+            //            cmd.Parameters.AddWithValue("@Password", Password);
+
+            //            conn.Open();
+            //            using (MySqlDataReader reader = cmd.ExecuteReader())
+            //            {
+            //                if (reader.Read())
+            //                {
+            //                    string dbUsername = reader.GetString("username");
+            //                    string dbPassword = reader.GetString("password");
+            //                    float weight = reader.GetFloat("weight");
+            //                    float height = reader.GetFloat("height");
+            //                    bool sex = reader.GetBoolean("sex");
+            //                    string activityStr = reader.GetString("activitylvl");
+            //                    DateTime dob = reader.GetDateTime("DoB");
+
+            //                    activityLevel activity = Enum.Parse<activityLevel>(activityStr);
+
+            //                    return new User(dbUsername, dbPassword, weight, height, sex, activity, dob);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("ERROR FETCHING USER: " + ex.Message);
+            //}
+
+            return null; // Return null if user not found or error occurs
         }
 
         public LoginMenuViewModel(NavigationStore navigationStore)
