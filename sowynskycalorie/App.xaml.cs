@@ -15,7 +15,7 @@ public partial class App : Application
 {
     private readonly NavigationStore _navigationStore;
     // this solution is of course pretty bad,but for simplicitys sake im not making an extra config file to store your password to, i trust i wont accidentaly push my own credentials to github.......
-    public static string ConnectionStr => "server=localhost;user id=INSERTID;password=INSERTPASSWORD;"; 
+    public static string ConnectionStr => "server=localhost;user id=root;password=Dallas;"; 
     public App()
     {
         _navigationStore = new NavigationStore();
@@ -65,15 +65,23 @@ public partial class App : Application
         string dbName = "sowynsky_calorie";
         using (MySqlConnection conn = new MySqlConnection(ConnectionStr))
         {
-            conn.Open();
-            string query = $"SHOW DATABASES LIKE '{dbName}'";
-            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            try
             {
-                var result = cmd.ExecuteScalar();
-                return result != null;
+                conn.Open();
+                string query = $"SHOW DATABASES LIKE '{dbName}'";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    var result = cmd.ExecuteScalar();
+                    return result != null;
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot open MYSQL connection", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new InvalidOperationException("ERROR OPENING MYSQL CONNECTION", ex);
+            }
+
         }
     }
-
 }
 

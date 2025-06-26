@@ -1,10 +1,12 @@
-﻿using sowynskycalorie.Model;
+﻿using MySql.Data.MySqlClient;
+using sowynskycalorie.Model;
 using sowynskycalorie.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using static sowynskycalorie.Model.User;
 
@@ -13,31 +15,130 @@ namespace sowynskycalorie.ViewModel
     public class RegisterUserViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
+        private string _username;
+        public string Username
+        {
+            get => _username;
+            set { _username = value; OnPropertyChanged(nameof(Username)); }
+        }
+
+        private string _password;
+        public string Password
+        {
+            get => _password;
+            set { _password = value; OnPropertyChanged(nameof(Password)); }
+        }
+
+        private bool _sex;
+        public bool Sex
+        {
+            get => _sex;
+            set { _sex = value; OnPropertyChanged(nameof(Sex)); }
+        }
+
+        private DateTime _selectedDate = DateTime.Now;
+        public DateTime SelectedDate
+        {
+            get => _selectedDate;
+            set { _selectedDate = value; OnPropertyChanged(nameof(SelectedDate)); }
+        }
+
+        private float _weight;
+        public float Weight
+        {
+            get => _weight;
+            set { _weight = value; OnPropertyChanged(nameof(Weight)); }
+        }
+
+        private float _height;
+        public float Height
+        {
+            get => _height;
+            set { _height = value; OnPropertyChanged(nameof(Height)); }
+        }
+        private activityLevel _selectedActivityLevel = activityLevel.sedentary;
+        public activityLevel SelectedActivityLevel
+        {
+            get => _selectedActivityLevel;
+            set { _selectedActivityLevel = value; OnPropertyChanged(nameof(SelectedActivityLevel)); }
+        }
         public ICommand ToLoginCommand { get; }
+        
         private void ExecuteToLoginCommand(object parameter)
         {
-            User createdUser = new User(
-                id: 6,
-                username: "JoeShmoe",
-                password: "mike",
-                weight: 80.0f,         
-                height: 180.0f,        
-                sex: true,             
-                activity: activityLevel.moderate,
-                dob: new DateTime(1997, 1, 1)  
-            );
-            createdUser.addUserToDB();
             _navigationStore.CurrentViewModel = new LoginMenuViewModel(_navigationStore);
         }
-        private bool CanExecute(object parameter)
+        private bool CanExecuteToLoginCommand(object parameter)
 
         {
             return true;
         }
+        public ICommand RegisterCommand { get; }
+        private void ExecuteRegisterCommand(object parameter)
+        {
+            User createdUser = new User(
+                username: Username,
+                password: Password,
+                weight: Weight,
+                height: Height,
+                sex: Sex,
+                activity: SelectedActivityLevel,
+                dob: SelectedDate
+            );
+            if (UsernameExists())
+            {
+                MessageBox.Show("Username already taken!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                createdUser.addUserToDB();
+                _navigationStore.CurrentViewModel = new LoginMenuViewModel(_navigationStore);
+            }
+        }
+        private bool CanExecuteRegisterCommand(object parameter)
+        {
+            if (string.IsNullOrWhiteSpace(Username)) return false;
+            if (string.IsNullOrWhiteSpace(Password)) return false;
+            if (Weight <= 0) return false;
+            if (Height <= 0) return false;
+            if (SelectedDate >= DateTime.Now) return false;
+
+            return true;
+        }
+
+        private bool UsernameExists()
+        {
+            bool exists = false;
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(App.ConnectionStr))
+                {
+                    string query = "SELECT COUNT(*) FROM sowynsky_calorie.Users WHERE username = @Username";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", Username);
+
+                        conn.Open();
+                        long count = (long)cmd.ExecuteScalar();
+                        exists = count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR CHECKING USERNAME: " + ex.Message);
+                exists = true;
+            }
+
+            return exists;
+        }
+
         public RegisterUserViewModel(NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
-            ToLoginCommand = new RelayCommand(ExecuteToLoginCommand, CanExecute);
+            ToLoginCommand = new RelayCommand(ExecuteToLoginCommand, CanExecuteToLoginCommand);
+            RegisterCommand = new RelayCommand(ExecuteRegisterCommand, CanExecuteRegisterCommand);
         }
     }
 }

@@ -8,11 +8,18 @@ using MySql.Data.MySqlClient;
 
 namespace sowynskycalorie.Model
 {
+    public enum activityLevel
+    {
+        sedentary,
+        light,
+        moderate,
+        very,
+        super
+    }
     public class User
     {
-        public User(int id, string username, string password, float weight, float height, bool sex, activityLevel activity, DateTime dob)
+        public User(string username, string password, float weight, float height, bool sex, activityLevel activity, DateTime dob)
         {
-            Id = id;
             Username = username;
             Password = password;
             Weight = weight;
@@ -39,7 +46,6 @@ namespace sowynskycalorie.Model
 
             KcalPerDay = (int)(BMR * multiplier);
         }
-        public int Id { get; private set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
         public float Weight { get; private set; }
@@ -48,15 +54,6 @@ namespace sowynskycalorie.Model
         public activityLevel Activity { get; private set; }
         public DateTime DoB { get; private set; } //date of birth
         public int KcalPerDay { get; private set; }
-
-        public enum activityLevel
-        {
-            sedentary,
-            light,
-            moderate,
-            very,
-            super  
-        }
         public void addUserToDB()
         {
             try
