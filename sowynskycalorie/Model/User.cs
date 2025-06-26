@@ -27,7 +27,20 @@ namespace sowynskycalorie.Model
             Sex = sex;
             Activity = activity;
             DoB = dob;
-            double BMR = (sex == true) ? (66.47 + (13.75 * Weight) + (5.003 * Height) - (6.755 * DateTime.Today.Year - DoB.Year)) : (655.1 + (9.563 * Weight) + (1.85 * Height) - (4.676 * DateTime.Today.Year - DoB.Year));
+
+            int age = DateTime.Today.Year - dob.Year;
+            if (DateTime.Today < dob.AddYears(age))
+                age--;
+
+            double bmr;
+            if (sex)
+            {
+                bmr = 66.47 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
+            }
+            else
+            {
+                bmr = 655.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
+            }
 
             //ABSOLUTELY DIABOLICAL TEMPORARY SOLUTION, FOR THE LOVE OF GOD PLEASE FIX THIS LATER
             double multiplier;
@@ -44,7 +57,7 @@ namespace sowynskycalorie.Model
             else
                 multiplier = 1.0;
 
-            KcalPerDay = (int)(BMR * multiplier);
+            KcalPerDay = (int)(bmr * multiplier);
         }
         public string Username { get; private set; }
         public string Password { get; private set; }

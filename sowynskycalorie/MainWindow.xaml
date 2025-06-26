@@ -20,6 +20,9 @@
             <DataTemplate DataType="{x:Type viewmodel:CalorieTrackerViewModel}">
                 <view:CalorieTrackerView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodel:AddProductViewModel}">
+                <view:AddProductViewModel/>
+            </DataTemplate>
         </Grid.Resources>
         <ContentControl Content="{Binding CurrentViewModel}"/>
     </Grid>  

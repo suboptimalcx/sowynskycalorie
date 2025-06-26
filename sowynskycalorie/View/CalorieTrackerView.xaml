@@ -84,14 +84,14 @@
                     FontSize="20"
                     Content="+"
                     Style="{StaticResource RoundedButton}"
-                    Command="{Binding NavigateToFoodPageCommand}"
+                    Command="{Binding AddFoodCommand}"
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Right"
                     Margin="5,0"/>
         </DockPanel>
 
         <ScrollViewer Grid.Row="1" Margin="15,5" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding AddedProducts}">
+            <ItemsControl ItemsSource="{Binding TrackedProducts}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical" />
@@ -120,14 +120,14 @@
                                                Foreground="#5D4037"
                                                Margin="0,0,0,5"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,2">
-                                        <TextBlock Text="Kcal: " FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Kcal}" Margin="4,0,15,0"/>
+                                        <TextBlock Text="Calories: " FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Calories}" Margin="4,0,15,0"/>
                                         <TextBlock Text="P: " FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding Protein}" Margin="4,0,15,0"/>
                                         <TextBlock Text="F: " FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding Fat}" Margin="4,0,15,0"/>
                                         <TextBlock Text="C: " FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Carbs}" Margin="4,0"/>
+                                        <TextBlock Text="{Binding Carbohydrates}" Margin="4,0"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
@@ -171,9 +171,9 @@
         <Run Text="{Binding CarbsGoal}"/>
             </TextBlock>
             <ProgressBar
-        Style="{StaticResource NutritionProgressBar}"
-        Value="{Binding CarbsProgress}"
-        Maximum="{Binding CarbsGoal}" />
+            Style="{StaticResource NutritionProgressBar}"
+            Value="{Binding CarbsProgress}"
+            Maximum="{Binding CarbsGoal}" />
 
         </StackPanel>
     </Grid>
