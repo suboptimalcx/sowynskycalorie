@@ -50,8 +50,26 @@ namespace sowynskycalorie.ViewModel
 
         private void ExecuteConfirm(object parameter)
         {
-            _calorieTrackerViewModel.TrackedProducts.Add(SelectedProduct);
+            double calculatedProtein = Math.Round(SelectedProduct.Protein * SelectedGrams / 100.0, 2);
+            double calculatedKcal = Math.Round(SelectedProduct.Calories * SelectedGrams / 100.0, 2);
+            double calculatedCarbohydrates = Math.Round(SelectedProduct.Carbohydrates * SelectedGrams / 100.0, 2);
+            double calculatedFat = Math.Round(SelectedProduct.Fat * SelectedGrams / 100.0, 2);
+
+            Product CalculatedProduct = new Product
+            {
+                Protein = calculatedProtein,
+                Calories = calculatedKcal,
+                Carbohydrates = calculatedCarbohydrates,
+                Fat = calculatedFat,
+                Name = SelectedProduct.Name,
+                Category = SelectedProduct.Category,
+                Id = SelectedProduct.Id,
+                Grams = SelectedGrams
+            };
+
+            _calorieTrackerViewModel.TrackedProducts.Add(CalculatedProduct);
             MessageBox.Show($"Added {SelectedGrams}g of {SelectedProduct?.Name}.");
+
         }
         private bool CanExecuteConfirm(object parameter)
         {

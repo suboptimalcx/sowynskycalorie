@@ -61,7 +61,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Enhanced Top Bar -->
         <DockPanel Grid.Row="0" Margin="15" LastChildFill="False" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
                 <Image Source="/Assets/logo1.png" Width="40" Height="40" Margin="0,0,10,0"/>
@@ -138,43 +137,53 @@
         </ScrollViewer>
 
         <StackPanel Grid.Row="2" Background="#FFF3E0" Margin="0,10,0,0">
+            <StackPanel Margin="0,5">
+                <TextBlock Style="{StaticResource ProgressLabel}">
+            <Run Text="Calories: "/>
+            <Run Text="{Binding KcalProgress}"/>
+            <Run Text=" / "/>
+            <Run Text="{Binding KcalGoal}"/>
+                </TextBlock>
+                <ProgressBar Style="{StaticResource NutritionProgressBar}"
+                     Value="{Binding KcalProgress}"
+                     Maximum="{Binding KcalGoal}"/>
+            </StackPanel>
 
-            <TextBlock Style="{StaticResource ProgressLabel}">
-        <Run Text="Calories: "/>
-        <Run Text="{Binding KcalGoal}"/>
-            </TextBlock>
-            <ProgressBar
-        Style="{StaticResource NutritionProgressBar}"
-        Value="{Binding KcalProgress}"
-        Maximum="{Binding KcalGoal}" />
+            <StackPanel Margin="0,5">
+                <TextBlock Style="{StaticResource ProgressLabel}">
+            <Run Text="Protein: "/>
+            <Run Text="{Binding ProteinProgress}"/>
+            <Run Text=" / "/>
+            <Run Text="{Binding ProteinGoal}"/>
+                </TextBlock>
+                <ProgressBar Style="{StaticResource NutritionProgressBar}"
+                     Value="{Binding ProteinProgress}"
+                     Maximum="{Binding ProteinGoal}"/>
+            </StackPanel>
 
-            <TextBlock Style="{StaticResource ProgressLabel}">
-        <Run Text="Protein: "/>
-        <Run Text="{Binding ProteinGoal}"/>
-            </TextBlock>
-            <ProgressBar
-        Style="{StaticResource NutritionProgressBar}"
-        Value="{Binding ProteinProgress}"
-        Maximum="{Binding ProteinGoal}" />
+            <StackPanel Margin="0,5">
+                <TextBlock Style="{StaticResource ProgressLabel}">
+            <Run Text="Fats: "/>
+            <Run Text="{Binding FatProgress}"/>
+            <Run Text=" / "/>
+            <Run Text="{Binding FatGoal}"/>
+                </TextBlock>
+                <ProgressBar Style="{StaticResource NutritionProgressBar}"
+                     Value="{Binding FatProgress}"
+                     Maximum="{Binding FatGoal}"/>
+            </StackPanel>
 
-            <TextBlock Style="{StaticResource ProgressLabel}">
-        <Run Text="Fats: "/>
-        <Run Text="{Binding FatGoal}"/>
-            </TextBlock>
-            <ProgressBar
-        Style="{StaticResource NutritionProgressBar}"
-        Value="{Binding FatProgress}"
-        Maximum="{Binding FatGoal}" />
-
-            <TextBlock Style="{StaticResource ProgressLabel}">
-        <Run Text="Carbs: "/>
-        <Run Text="{Binding CarbsGoal}"/>
-            </TextBlock>
-            <ProgressBar
-            Style="{StaticResource NutritionProgressBar}"
-            Value="{Binding CarbsProgress}"
-            Maximum="{Binding CarbsGoal}" />
-
+            <StackPanel Margin="0,5">
+                <TextBlock Style="{StaticResource ProgressLabel}">
+            <Run Text="Carbs: "/>
+            <Run Text="{Binding CarbsProgress}"/>
+            <Run Text=" / "/>
+            <Run Text="{Binding CarbsGoal}"/>
+                </TextBlock>
+                <ProgressBar Style="{StaticResource NutritionProgressBar}"
+                     Value="{Binding CarbsProgress}"
+                     Maximum="{Binding CarbsGoal}"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

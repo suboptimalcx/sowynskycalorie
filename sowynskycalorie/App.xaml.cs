@@ -15,7 +15,7 @@ public partial class App : Application
 {
     private readonly NavigationStore _navigationStore;
     // this solution is of course pretty bad,but for simplicitys sake im not making an extra config file to store your password to, i trust i wont accidentaly push my own credentials to github.......
-    public static string ConnectionStr => "server=localhost;user id=root;password=Miami"; 
+    public static string ConnectionStr => "server=localhost;user id=root;password=Dallas"; 
     public App()
     {
         _navigationStore = new NavigationStore();

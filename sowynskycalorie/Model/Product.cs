@@ -15,5 +15,6 @@ namespace sowynskycalorie.Model
         public double Carbohydrates { get; set; }
         public double Fat { get; set; }
         public string Category { get; set; }
+        public int Grams { get; set; }
     }
 }
