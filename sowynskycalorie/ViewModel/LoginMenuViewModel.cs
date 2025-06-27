@@ -90,7 +90,7 @@ namespace sowynskycalorie.ViewModel
                 using (MySqlConnection conn = new MySqlConnection(App.ConnectionStr))
                 {
                     string query = @"USE sowynsky_calorie; 
-                             SELECT username, password, weight, height, sex, activitylvl, DoB 
+                             SELECT id, username, password, weight, height, sex, activitylvl, DoB 
                              FROM Users 
                              WHERE username = @Username AND password = @Password";
 
@@ -104,6 +104,7 @@ namespace sowynskycalorie.ViewModel
                         {
                             if (reader.Read())
                             {
+                                int id = reader.GetInt32("id");
                                 string dbUsername = reader.GetString("username");
                                 string dbPassword = reader.GetString("password");
                                 float weight = reader.GetFloat("weight");
@@ -114,7 +115,9 @@ namespace sowynskycalorie.ViewModel
 
                                 activityLevel activity = Enum.Parse<activityLevel>(activityStr);
 
-                                return new User(dbUsername, dbPassword, weight, height, sex, activity, dob);
+                                User u = new User(dbUsername, dbPassword, weight, height, sex, activity, dob);
+                                u.Id = id;
+                                return u;
                             }
                         }
                     }
@@ -124,7 +127,6 @@ namespace sowynskycalorie.ViewModel
             {
                 Console.WriteLine("ERROR FETCHING USER: " + ex.Message);
             }
-
             return null;
         }
 

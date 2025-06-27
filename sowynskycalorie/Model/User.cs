@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.Swift;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Security;
 
 namespace sowynskycalorie.Model
 {
@@ -59,6 +61,7 @@ namespace sowynskycalorie.Model
 
             KcalPerDay = (int)(bmr * multiplier);
         }
+        public int Id { get; internal set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
         public float Weight { get; private set; }
@@ -95,7 +98,6 @@ namespace sowynskycalorie.Model
             {
                 Console.WriteLine("ERROR WHILE ADDING USER TO  DATABASE: " + ex.Message);
             }
-            
         } 
     }
 }

@@ -9,8 +9,12 @@
 - Add and manage foods with nutritional values  
 - Create and track meals made of various foods  
 - Store everything locally in a MySQL database  
+- calculates your daily protein carbs fats kcal intake (insane)
+- can rate meals (wow)
+- mediocre ui (crrazy)
 TODO
-- bmi calculator that tracks how much calories you have to eat to lose/maintain/gain weight
+- refactor, some chunks of code are ugly
+- like/dislike for each product
 ---
 
 ## Architecture

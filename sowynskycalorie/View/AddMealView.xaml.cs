@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace sowynskycalorie.View
 {
     /// <summary>
-    /// Interaction logic for AddProductViewModel.xaml
+    /// Interaction logic for AddMealView.xaml
     /// </summary>
-    public partial class AddProductViewModel : UserControl
+    public partial class AddMealView : UserControl
     {
-        public AddProductViewModel()
+        public AddMealView()
         {
             InitializeComponent();
         }

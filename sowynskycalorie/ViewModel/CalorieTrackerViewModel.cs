@@ -14,6 +14,7 @@ namespace sowynskycalorie.ViewModel
         private readonly User _user;
 
         public ObservableCollection<Product> TrackedProducts { get; } = new ObservableCollection<Product>();
+        public ObservableCollection<Meal> TrackedMeals { get; } = new ObservableCollection<Meal>();
 
         public int KcalGoal { get; set; }
         public int ProteinGoal { get; set; }
@@ -48,18 +49,42 @@ namespace sowynskycalorie.ViewModel
 
         private void ExecuteAddFoodCommand(object parameter)
         {
-            _navigationStore.CurrentViewModel = new AddProductViewModel(_navigationStore, this);
+            _navigationStore.CurrentViewModel = new AddProductViewModel(_navigationStore, this, _user.Id);
         }
         private bool CanExecuteAddFoodCommand(object parameter)
         {
             return true;
         }
+        public ICommand DeleteFoodCommand { get; }
+        private void ExecuteDeleteFoodCommand(object parameter)
+        {
+            if (parameter is Product product && TrackedProducts.Contains(product))
+            {
+                TrackedProducts.Remove(product);
+            }
+        }
+        private bool CanExecuteDeleteFoodCommand(object parameter)
+        {
+            return true;
+        }
+        public ICommand DeleteMealCommand { get; }
+        private void ExecuteDeleteMealCommand(object parameter)
+        {
+            if (parameter is Meal meal && TrackedMeals.Contains(meal))
+            {
+                TrackedMeals.Remove(meal);
+            }
+        }
+        private bool CanExecuteDeleteMealCommand(object parameter)
+        {
+            return true;
+        }
         private void UpdateProgress()
         {
-            var totalKcal = TrackedProducts.Sum(p => p.Calories);
-            var totalProtein = TrackedProducts.Sum(p => p.Protein);
-            var totalFat = TrackedProducts.Sum(p => p.Fat);
-            var totalCarbs = TrackedProducts.Sum(p => p.Carbohydrates);
+            var totalKcal = TrackedProducts.Sum(p => p.Calories) + TrackedMeals.Sum(m => m.TotalCalories);
+            var totalProtein = TrackedProducts.Sum(p => p.Protein) + TrackedMeals.Sum(m => m.TotalProtein);
+            var totalFat = TrackedProducts.Sum(p => p.Fat) + TrackedMeals.Sum(m => m.TotalFat); 
+            var totalCarbs = TrackedProducts.Sum(p => p.Carbohydrates) + TrackedMeals.Sum(m => m.TotalCarbohydrates);
 
             KcalProgress = (int)Math.Round(totalKcal);
             ProteinProgress = (int)Math.Round(totalProtein);
@@ -71,6 +96,8 @@ namespace sowynskycalorie.ViewModel
             _navigationStore = navigationStore;
             _user = user;
             AddFoodCommand = new RelayCommand(ExecuteAddFoodCommand, CanExecuteAddFoodCommand);
+            DeleteFoodCommand = new RelayCommand(ExecuteDeleteFoodCommand, CanExecuteDeleteFoodCommand);
+            DeleteMealCommand = new RelayCommand(ExecuteDeleteMealCommand, CanExecuteDeleteMealCommand);
             KcalGoal = _user.KcalPerDay;
 
             ProteinGoal = (int)Math.Round((0.3 * KcalGoal) / 4); // 4 kcal/g
@@ -78,6 +105,7 @@ namespace sowynskycalorie.ViewModel
             CarbsGoal = (int)Math.Round((0.45 * KcalGoal) / 4);  // 4 kcal/g
 
             TrackedProducts.CollectionChanged += (s, e) => UpdateProgress();
+            TrackedMeals.CollectionChanged += (s, e) => UpdateProgress();
         }
     }
 }

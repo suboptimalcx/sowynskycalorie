@@ -16,6 +16,7 @@ namespace sowynskycalorie.ViewModel
     {
         private CalorieTrackerViewModel _calorieTrackerViewModel;
         private readonly NavigationStore _navigationStore;
+        private readonly int _userId;
         public ObservableCollection<string> Categories { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<Product> AllProducts { get; set; } = new ObservableCollection<Product>();
         public ObservableCollection<Product> FilteredProducts { get; set; } = new ObservableCollection<Product>();
@@ -85,6 +86,15 @@ namespace sowynskycalorie.ViewModel
         {
             return true;
         }
+        public ICommand GoToAddMealCommand { get; }
+        private void ExecuteGoToMeal(object parameter)
+        {
+            _navigationStore.CurrentViewModel = new AddMealViewModel(_navigationStore, _calorieTrackerViewModel, _userId); 
+        }
+        private bool CanExecuteGoToMeal(object parameter)
+        {
+            return true;
+        }
 
         private void LoadData()
         {
@@ -140,13 +150,15 @@ namespace sowynskycalorie.ViewModel
                     FilteredProducts.Add(product);
             }
         }
-        public AddProductViewModel(NavigationStore navigationStore, CalorieTrackerViewModel calorieTrackerViewModel)
+        public AddProductViewModel(NavigationStore navigationStore, CalorieTrackerViewModel calorieTrackerViewModel, int userId)
         {
             _navigationStore = navigationStore;
             LoadData();
             _calorieTrackerViewModel = calorieTrackerViewModel;
             ConfirmCommand = new RelayCommand(ExecuteConfirm, CanExecuteConfirm);
             ExitViewCommand = new RelayCommand(ExecuteExitView, CanExecuteExitView);
+            GoToAddMealCommand = new RelayCommand(ExecuteGoToMeal, CanExecuteGoToMeal);
+            _userId = userId;
         }
     }
 }
