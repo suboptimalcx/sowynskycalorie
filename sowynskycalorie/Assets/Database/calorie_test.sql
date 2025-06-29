@@ -38,7 +38,14 @@ CREATE TABLE `meals` (
 
 LOCK TABLES `meals` WRITE;
 /*!40000 ALTER TABLE `meals` DISABLE KEYS */;
-INSERT INTO `meals` VALUES (1,'dinner','cool dinner'),(2,'breakfast','god breakfast'),(3,'protein bomb','super combo');
+INSERT INTO `meals` VALUES 
+(1,'dinner','cool dinner'),
+(2,'breakfast','god breakfast'),
+(3,'protein bomb','super combo'),
+(4,'veggie delight','light and healthy vegetarian combo'),
+(5,'muscle builder','high-protein meal for muscle gain'),
+(6,'classic breakfast','balanced traditional morning meal'),
+(7,'energy booster','carb-focused meal to fuel the day');
 /*!40000 ALTER TABLE `meals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +75,25 @@ CREATE TABLE `meals_products` (
 
 LOCK TABLES `meals_products` WRITE;
 /*!40000 ALTER TABLE `meals_products` DISABLE KEYS */;
-INSERT INTO `meals_products` VALUES (1,1,1,100),(2,1,2,100),(3,2,3,50),(4,2,4,75),(5,3,1,200),(6,3,5,100);
+INSERT INTO `meals_products` VALUES 
+(1,1,1,100),
+(2,1,2,100),
+(3,2,3,50),
+(4,2,4,75),
+(5,3,1,200),
+(6,3,5,100),
+(7,4,8,100),
+(8,4,12,150),
+(9,4,15,100),
+(10,5,1,200),
+(11,5,5,50),
+(12,5,16,30),
+(13,6,4,100),
+(14,6,10,200),
+(15,6,20,100),
+(16,7,2,150),
+(17,7,7,100),
+(18,7,13,100);
 /*!40000 ALTER TABLE `meals_products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,7 +151,27 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Chicken breast',165,31.00,0.00,3.60,'meat'),(2,'Brown rice',216,5.00,44.80,1.80,'rice_and_pasta'),(3,'Avocado',160,2.00,8.50,14.70,'fruits'),(4,'Egg',68,5.50,0.60,4.80,'eggs'),(5,'Protein bar',200,20.00,22.00,6.50,'snacks');
+INSERT INTO `products` VALUES
+(1,'Chicken breast',165,31.00,0.00,3.60,'meat'),
+(2,'Brown rice',216,5.00,44.80,1.80,'rice_and_pasta'),
+(3,'Avocado',160,2.00,8.50,14.70,'fruits'),
+(4,'Egg',68,5.50,0.60,4.80,'eggs'),
+(5,'Protein bar',200,20.00,22.00,6.50,'snacks'),
+(6,'Almonds',579,21.15,21.55,49.93,'nuts_and_seeds'),
+(7,'Banana',89,1.09,22.84,0.33,'fruits'),
+(8,'Broccoli',34,2.82,6.64,0.37,'vegetables'),
+(9,'Salmon',208,20.42,0.00,13.42,'fish'),
+(10,'Whole milk',61,3.15,4.80,3.25,'dairy'),
+(11,'Olive oil',884,0.00,0.00,100.00,'fats_and_oils'),
+(12,'Sweet potato',86,1.57,20.12,0.05,'vegetables'),
+(13,'Apple',52,0.26,13.81,0.17,'fruits'),
+(14,'Beef steak',271,25.00,0.00,19.00,'meat'),
+(15,'Tofu',76,8.00,1.90,4.80,'legumes'),
+(16,'Peanut butter',588,25.00,20.00,50.00,'nuts_and_seeds'),
+(17,'Yogurt',59,10.00,3.60,0.40,'dairy'),
+(18,'Cheddar cheese',402,25.00,1.30,33.00,'dairy'),
+(19,'Lentils',116,9.02,20.13,0.38,'legumes'),
+(20,'Oatmeal',68,2.40,12.00,1.40,'grains');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 

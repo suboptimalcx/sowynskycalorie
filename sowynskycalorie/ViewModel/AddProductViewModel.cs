@@ -20,6 +20,7 @@ namespace sowynskycalorie.ViewModel
         public ObservableCollection<string> Categories { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<Product> AllProducts { get; set; } = new ObservableCollection<Product>();
         public ObservableCollection<Product> FilteredProducts { get; set; } = new ObservableCollection<Product>();
+        private List<int> LikedProductIds { get; set; } = new List<int>();
 
         private string _selectedCategory;
         public string SelectedCategory
@@ -45,6 +46,17 @@ namespace sowynskycalorie.ViewModel
             get => selectedGrams;
             set
             { selectedGrams = value; OnPropertyChanged(nameof(SelectedGrams)); }
+        }
+        private bool _showLikedOnly;
+        public bool ShowLikedOnly
+        {
+            get => _showLikedOnly;
+            set
+            {
+                _showLikedOnly = value;
+                OnPropertyChanged(nameof(ShowLikedOnly));
+                FilterProducts();
+            }
         }
 
         public ICommand ConfirmCommand { get; }
@@ -95,14 +107,74 @@ namespace sowynskycalorie.ViewModel
         {
             return true;
         }
+        public ICommand LikeProductCommand { get; }
+        private void ExecuteLikeProduct(object parameter)
+        {
+            try
+            {
+                using var conn = new MySqlConnection(App.ConnectionStr);
+                conn.Open();
 
-        private void LoadData()
+                string checkQuery = "SELECT preference FROM products_preferences WHERE userID = @userID AND productID = @productID";
+                using var checkCmd = new MySqlCommand(checkQuery, conn);
+                checkCmd.Parameters.AddWithValue("@userID", _userId);
+                checkCmd.Parameters.AddWithValue("@productID", SelectedProduct.Id);
+
+                var result = checkCmd.ExecuteScalar();
+
+                if (result != null && result.ToString() == "like")
+                {
+                    MessageBox.Show("You already liked this product.");
+                    return;
+                }
+                else
+                {
+                    // Insert new preference
+                    string insertQuery = "INSERT INTO products_preferences (userID, productID, preference) VALUES (@userID, @productID, 'like')";
+                    using var insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@userID", _userId);
+                    insertCmd.Parameters.AddWithValue("@productID", SelectedProduct.Id);
+                    insertCmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show($"You liked {SelectedProduct.Name}.");
+
+                if (!LikedProductIds.Contains(SelectedProduct.Id)) //locally add the product so it updates realtime
+                    LikedProductIds.Add(SelectedProduct.Id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error toggling like: {ex.Message}");
+            }
+        }
+        private bool CanExecuteLikeProduct(object parameter)
+        {
+            if (SelectedProduct == null) return false;
+            return true;
+        }
+        private void LoadData() //diabolical, refactor
         {
             try
             {
                 using (var conn = new MySqlConnection(App.ConnectionStr))
                 {
                     conn.Open();
+
+                    //liked product ID
+                    string likesQuery = "SELECT productID FROM products_preferences WHERE userID = @userId AND preference = 'like'";
+                    using (var cmd = new MySqlCommand(likesQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", _userId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                LikedProductIds.Add(reader.GetInt32("productID"));
+                            }
+                        }
+                    }
+
+                    //all products
                     string query = "SELECT * FROM products";
                     using (var cmd = new MySqlCommand(query, conn))
                     using (var reader = cmd.ExecuteReader())
@@ -127,7 +199,7 @@ namespace sowynskycalorie.ViewModel
                         }
                     }
 
-                    FilterProducts(); 
+                    FilterProducts();
                 }
             }
             catch (Exception ex)
@@ -135,30 +207,32 @@ namespace sowynskycalorie.ViewModel
                 MessageBox.Show("ERROR WHILE LOADING PRODUCTS: " + ex.Message);
             }
         }
-        private void FilterProducts()
+        private void FilterProducts() //TODO : FIX, AFTER SELECTING A FILTER YOU CANT UNSELECT IT
         {
             FilteredProducts.Clear();
 
-            if (string.IsNullOrEmpty(SelectedCategory)) //TODO : FIX, AFTER SELECTING A FILTER YOU CANT UNSELECT IT WHATEVER MAN I JUST WANT TO FINISH THIS
-            {
-                foreach (var product in AllProducts)
-                    FilteredProducts.Add(product);
-            }
-            else
-            {
-                foreach (var product in AllProducts.Where(p => p.Category == SelectedCategory))
-                    FilteredProducts.Add(product);
-            }
+            var productsToFilter = AllProducts.AsEnumerable();
+
+            if (ShowLikedOnly)
+                productsToFilter = productsToFilter.Where(p => LikedProductIds.Contains(p.Id));
+
+            if (!string.IsNullOrEmpty(SelectedCategory))
+                productsToFilter = productsToFilter.Where(p => p.Category == SelectedCategory);
+
+            foreach (var product in productsToFilter)
+                FilteredProducts.Add(product);
         }
+
         public AddProductViewModel(NavigationStore navigationStore, CalorieTrackerViewModel calorieTrackerViewModel, int userId)
         {
             _navigationStore = navigationStore;
-            LoadData();
             _calorieTrackerViewModel = calorieTrackerViewModel;
             ConfirmCommand = new RelayCommand(ExecuteConfirm, CanExecuteConfirm);
             ExitViewCommand = new RelayCommand(ExecuteExitView, CanExecuteExitView);
             GoToAddMealCommand = new RelayCommand(ExecuteGoToMeal, CanExecuteGoToMeal);
+            LikeProductCommand = new RelayCommand(ExecuteLikeProduct, CanExecuteLikeProduct);
             _userId = userId;
+            LoadData();
         }
     }
 }

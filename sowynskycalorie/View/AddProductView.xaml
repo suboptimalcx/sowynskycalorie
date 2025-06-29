@@ -73,6 +73,11 @@
                   Foreground="Black"
                   Padding="4,2"
                   Margin="0,0,0,0"/>
+            <CheckBox Content="Show Liked Only"
+              VerticalAlignment="Center"
+              FontWeight="SemiBold"
+              FontSize="14"
+              IsChecked="{Binding ShowLikedOnly}" />
         </StackPanel>
 
         <Border Grid.Row="3" Background="White" BorderBrush="#FFCCBC" BorderThickness="1" CornerRadius="8" Padding="4" MaxHeight="320">
@@ -122,6 +127,25 @@
             </Border>
             <Button Content="Add"
                     Command="{Binding ConfirmCommand}"
+                    IsEnabled="{Binding SelectedProduct}"
+                    Background="#FF7043"
+                    Foreground="White"
+                    Padding="6,2"
+                    Width="100"
+                    FontWeight="SemiBold"
+                    BorderThickness="0"
+                    Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button Content="Like"
+                    Command="{Binding LikeProductCommand}"
                     IsEnabled="{Binding SelectedProduct}"
                     Background="#FF7043"
                     Foreground="White"

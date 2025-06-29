@@ -166,6 +166,27 @@ namespace sowynskycalorie.ViewModel
                         meal.MealProducts.Add(mealProduct);
                     }
                 }
+                string ratingsQuery = "SELECT * FROM meals_ratings";
+                using (var ratingsCmd = new MySqlCommand(ratingsQuery, conn))
+                using (var ratingsReader = ratingsCmd.ExecuteReader())
+                {
+                    while (ratingsReader.Read())
+                    {
+                        int mealId = ratingsReader.GetInt32("mealID");
+                        if (!mealsDict.TryGetValue(mealId, out var meal))
+                            continue;
+
+                        var rating = new MealRating
+                        {
+                            Id = ratingsReader.GetInt32("id"),
+                            UserId = ratingsReader.GetInt32("userID"),
+                            MealId = mealId,
+                            Rating = ratingsReader.IsDBNull("meal_rating") ? null : ratingsReader.GetInt32("meal_rating")
+                        };
+
+                        meal.Ratings.Add(rating);
+                    }
+                }
 
                 foreach (var meal in mealsDict.Values)
                     AllMeals.Add(meal);

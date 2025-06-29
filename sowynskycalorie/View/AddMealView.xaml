@@ -98,6 +98,14 @@
                                            Foreground="#9E9E9E"
                                            FontSize="11"
                                            Margin="0,4,0,0"/>
+                                <TextBlock FontSize="12" Foreground="#5D4037" Margin="0,4,0,0">
+<TextBlock FontSize="12" Foreground="#5D4037" Margin="0,4,0,0">
+    <Run Text="Average Rating: "/>
+    <Run Text="{Binding AverageRating, Mode=OneWay, StringFormat={}{0:N1}}"/>
+    <Run Text="/10"/>
+</TextBlock>
+                                </TextBlock>
+
                             </StackPanel>
                         </Border>
                     </DataTemplate>
