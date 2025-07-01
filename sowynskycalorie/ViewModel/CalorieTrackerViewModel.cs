@@ -1,9 +1,6 @@
 ﻿using sowynskycalorie.Model;
 using sowynskycalorie.Stores;
-using System;
-using System.ComponentModel;
 using System.Windows.Input;
-using System.Windows;
 using System.Collections.ObjectModel;
 
 namespace sowynskycalorie.ViewModel
@@ -63,7 +60,7 @@ namespace sowynskycalorie.ViewModel
                 TrackedProducts.Remove(product);
             }
         }
-        private bool CanExecuteDeleteFoodCommand(object parameter)
+        private bool CanExecuteDeleteCommand(object parameter)
         {
             return true;
         }
@@ -74,10 +71,6 @@ namespace sowynskycalorie.ViewModel
             {
                 TrackedMeals.Remove(meal);
             }
-        }
-        private bool CanExecuteDeleteMealCommand(object parameter)
-        {
-            return true;
         }
         private void UpdateProgress()
         {
@@ -96,8 +89,8 @@ namespace sowynskycalorie.ViewModel
             _navigationStore = navigationStore;
             _user = user;
             AddFoodCommand = new RelayCommand(ExecuteAddFoodCommand, CanExecuteAddFoodCommand);
-            DeleteFoodCommand = new RelayCommand(ExecuteDeleteFoodCommand, CanExecuteDeleteFoodCommand);
-            DeleteMealCommand = new RelayCommand(ExecuteDeleteMealCommand, CanExecuteDeleteMealCommand);
+            DeleteFoodCommand = new RelayCommand(ExecuteDeleteFoodCommand, CanExecuteDeleteCommand);
+            DeleteMealCommand = new RelayCommand(ExecuteDeleteMealCommand, CanExecuteDeleteCommand);
             KcalGoal = _user.KcalPerDay;
 
             ProteinGoal = (int)Math.Round((0.3 * KcalGoal) / 4); // 4 kcal/g

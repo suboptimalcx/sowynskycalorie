@@ -1,11 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using sowynskycalorie.DataAccess;
 using sowynskycalorie.Model;
 using sowynskycalorie.Stores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -75,6 +70,12 @@ namespace sowynskycalorie.ViewModel
         public ICommand RegisterCommand { get; }
         private void ExecuteRegisterCommand(object parameter)
         {
+            if (UserDataHandler.UsernameExists(Username))
+            {
+                MessageBox.Show("Username already taken!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             User createdUser = new User(
                 username: Username,
                 password: Password,
@@ -84,15 +85,8 @@ namespace sowynskycalorie.ViewModel
                 activity: SelectedActivityLevel,
                 dob: SelectedDate
             );
-            if (UsernameExists())
-            {
-                MessageBox.Show("Username already taken!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                createdUser.addUserToDB();
-                _navigationStore.CurrentViewModel = new LoginMenuViewModel(_navigationStore);
-            }
+            UserDataHandler.addUserToDB(createdUser);
+            _navigationStore.CurrentViewModel = new LoginMenuViewModel(_navigationStore);
         }
         private bool CanExecuteRegisterCommand(object parameter)
         {
@@ -103,34 +97,6 @@ namespace sowynskycalorie.ViewModel
             if (SelectedDate >= DateTime.Now) return false;
 
             return true;
-        }
-
-        private bool UsernameExists()
-        {
-            bool exists = false;
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(App.ConnectionStr))
-                {
-                    string query = "SELECT COUNT(*) FROM sowynsky_calorie.Users WHERE username = @Username";
-
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", Username);
-
-                        conn.Open();
-                        long count = (long)cmd.ExecuteScalar();
-                        exists = count > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("ERROR CHECKING USERNAME: " + ex.Message);
-                exists = true;
-            }
-
-            return exists;
         }
 
         public RegisterUserViewModel(NavigationStore navigationStore)

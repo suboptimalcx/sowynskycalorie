@@ -1,7 +1,6 @@
 # SowynskyCalorie
 
 *SowynskyCalorie* is a WPF desktop app built as a student project for my 4th semester. track your daily calorie intake by letting you manage foods, meals, and nutrition info
-*IMPORTANT* later features of the projects were rushed due to (reasons) some classes do way too much, overall could use a refcactor etc etc, will fix later (propably not)
 ---
 ## Features
 
@@ -12,11 +11,17 @@
 - calculates your daily protein carbs fats kcal intake (insane)
 - can rate meals (wow)
 - mediocre ui (crrazy)
-#TODO
-- refactor, some chunks of code are ugly
-- like/dislike for each product
+
+## TODO 
+- propably remove the like/dislike table....
 ---
 
+## Screenshot Preview
+test img:
+
+![SowynskyCalorie UI](sowynskycalorie/Assets/zyaween.png)  
+
+---
 ## Architecture
 
 - Built using the MVVM design pattern  

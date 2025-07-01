@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using MySql.Data.MySqlClient;
+using sowynskycalorie.DataAccess;
 using sowynskycalorie.Model;
 using sowynskycalorie.Stores;
 
@@ -24,8 +21,8 @@ namespace sowynskycalorie.ViewModel
             get => _selectedMeal;
             set { _selectedMeal = value; OnPropertyChanged(nameof(SelectedMeal)); }
         }
-        private int? _selectedRating;
-        public int? SelectedRating
+        private int _selectedRating;
+        public int SelectedRating
         {
             get => _selectedRating;
             set { _selectedRating = value; OnPropertyChanged(nameof(SelectedRating)); }
@@ -34,46 +31,9 @@ namespace sowynskycalorie.ViewModel
         public ICommand RateMealCommand { get; }
         private void ExecuteRateMeal(object parameter)
         {
-            try
-            {
-                using var conn = new MySqlConnection(App.ConnectionStr);
-                conn.Open();
-                string checkQuery = "SELECT COUNT(*) FROM meals_ratings WHERE userID = @userID AND mealID = @mealID";
-                using (var checkCmd = new MySqlCommand(checkQuery, conn))
-                {
-                    checkCmd.Parameters.AddWithValue("@userID", _userId);
-                    checkCmd.Parameters.AddWithValue("@mealID", SelectedMeal.Id);
-
-                    var exists = Convert.ToInt32(checkCmd.ExecuteScalar()) > 0;
-                    if (exists)
-                    {
-                        MessageBox.Show("You've already rated this meal.");
-                        return;
-                    }
-                }
-
-                string insertQuery = "INSERT INTO meals_ratings (userID, mealID, meal_rating) VALUES (@userID, @mealID, @rating)";
-                using var cmd = new MySqlCommand(insertQuery, conn);
-                cmd.Parameters.AddWithValue("@userID", _userId);
-                cmd.Parameters.AddWithValue("@mealID", SelectedMeal.Id);
-                cmd.Parameters.AddWithValue("@rating", SelectedRating.ToString());
-
-                cmd.ExecuteNonQuery();
-
-                SelectedMeal.Ratings.Add(new MealRating
-                {
-                    UserId = _userId,
-                    MealId = SelectedMeal.Id,
-                    Rating = SelectedRating
-                });
-
-                OnPropertyChanged(nameof(SelectedMeal));
-                MessageBox.Show($"You rated {SelectedMeal.Name} as {SelectedRating}/10.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving rating: {ex.Message}");
-            }
+            MealDataHandler.ExecuteRateMeal(_userId, SelectedMeal, SelectedRating);
+            OnPropertyChanged(nameof(SelectedMeal));
+            MessageBox.Show($"You rated {SelectedMeal.Name} as {SelectedRating}/10.");
         }
         private bool CanExecuteRateMeal(object parameter)
         {
@@ -111,91 +71,6 @@ namespace sowynskycalorie.ViewModel
         {
             _navigationStore.CurrentViewModel = new AddProductViewModel(_navigationStore, _calorieTrackerViewModel, _userId);
         }
-        private void LoadMealsFromDatabase() //TODO: chop into smaller functions later
-        {
-            try
-            {
-                using var conn = new MySqlConnection(App.ConnectionStr);
-                conn.Open();
-
-                var mealsDict = new Dictionary<int, Meal>();
-
-                //Load all meals
-                string mealQuery = "SELECT * FROM meals";
-                using (var mealCmd = new MySqlCommand(mealQuery, conn))
-                using (var mealReader = mealCmd.ExecuteReader())
-                {
-                    while (mealReader.Read())
-                    {
-                        var meal = new Meal
-                        {
-                            Id = mealReader.GetInt32("id"),
-                            Name = mealReader.GetString("name"),
-                            Description = mealReader.GetString("description")
-                        };
-                        mealsDict.Add(meal.Id, meal);
-                    }
-                }
-
-                // Load products
-                string mealProductsQuery = @"
-            SELECT mp.mealID, p.id AS productID, p.name, p.calories, p.protein, p.carbohydrates, p.fat, p.category, mp.grams
-            FROM meals_products mp
-            INNER JOIN products p ON mp.productID = p.id";
-                using (var mpCmd = new MySqlCommand(mealProductsQuery, conn))
-                using (var mpReader = mpCmd.ExecuteReader())
-                {
-                    while (mpReader.Read())
-                    {
-                        int mealID = mpReader.GetInt32("mealID");
-                        if (!mealsDict.TryGetValue(mealID, out var meal))
-                            continue;
-
-                        var mealProduct = new MealProduct
-                        {
-                            ProductId = mpReader.GetInt32("productID"),
-                            ProductName = mpReader.GetString("name"),
-                            CaloriesPer100g = mpReader.GetDouble("calories"),
-                            ProteinPer100g = mpReader.GetDouble("protein"),
-                            CarbohydratesPer100g = mpReader.GetDouble("carbohydrates"),
-                            FatPer100g = mpReader.GetDouble("fat"),
-                            Category = mpReader.GetString("category"),
-                            Grams = mpReader.GetInt32("grams")
-                        };
-
-                        meal.MealProducts.Add(mealProduct);
-                    }
-                }
-                string ratingsQuery = "SELECT * FROM meals_ratings";
-                using (var ratingsCmd = new MySqlCommand(ratingsQuery, conn))
-                using (var ratingsReader = ratingsCmd.ExecuteReader())
-                {
-                    while (ratingsReader.Read())
-                    {
-                        int mealId = ratingsReader.GetInt32("mealID");
-                        if (!mealsDict.TryGetValue(mealId, out var meal))
-                            continue;
-
-                        var rating = new MealRating
-                        {
-                            Id = ratingsReader.GetInt32("id"),
-                            UserId = ratingsReader.GetInt32("userID"),
-                            MealId = mealId,
-                            Rating = ratingsReader.IsDBNull("meal_rating") ? null : ratingsReader.GetInt32("meal_rating")
-                        };
-
-                        meal.Ratings.Add(rating);
-                    }
-                }
-
-                foreach (var meal in mealsDict.Values)
-                    AllMeals.Add(meal);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"ERROR LOADING MEALS: {ex.Message}");
-            }
-        }
 
         public AddMealViewModel(NavigationStore navigationStore, CalorieTrackerViewModel calorieTrackerViewModel, int userId)
         {
@@ -208,7 +83,7 @@ namespace sowynskycalorie.ViewModel
             RateMealCommand = new RelayCommand(ExecuteRateMeal, CanExecuteRateMeal);
             GoToAddProductCommand = new RelayCommand(ExecuteGoToAddProduct, CanExecuteGoToAddProduct);
 
-            LoadMealsFromDatabase();
+            MealDataHandler.LoadMealsFromDatabase(AllMeals);
         }
     }
 }
